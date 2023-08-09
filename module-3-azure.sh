@@ -1,21 +1,34 @@
-export RESOURCE_GROUP=learn-49dbbf33-638e-49b4-b92b-d0a58a9a1564
-export RESOURCE_GROUP=mdjava_rg
+export RESOURCE_GROUP_PL=mdjava_rg_pl
+export RESOURCE_GROUP_EU=mdjava_rg_eu
+export RESOURCE_GROUP=mdjava_rg_repo
 export AZURE_REGION_PL=polandcentral
 export AZURE_REGION_US=westus
-export AZURE_REGION=westeurope
+export AZURE_REGION_EU=westeurope
 export AZURE_APP_PLAN=mdjava_plan
-export AZURE_WEB_APP_UI=mdjava-app
-export AZURE_WEB_APP_ORDERS=mdjava-orders
-export AZURE_WEB_APP_PRODUCTS=mdjava-products
-export AZURE_WEB_APP_PETS=mdjava-pets
+
+export AZURE_WEB_APP_UI_EU=mdjava-app-eu
+export AZURE_WEB_APP_ORDERS_EU=mdjava-orders-eu
+export AZURE_WEB_APP_PRODUCTS_EU=mdjava-products-eu
+export AZURE_WEB_APP_PETS_EU=mdjava-pets-eu
+
+export AZURE_WEB_APP_UI_PL=mdjava-app-us
+export AZURE_WEB_APP_ORDERS_PL=mdjava-orders-us
+export AZURE_WEB_APP_PRODUCTS_PL=mdjava-products-us
+export AZURE_WEB_APP_PETS_PL=mdjava-pets-us
+
 export VM_LIN_NAME=mateusz-ubntu-az-java
+
 export D_REG_NAME=mdjava
 export AZ_NET=.azurewebsites.net
-export PETSTOREPETSERVICE_URL=http://mdjava-pets.azurewebsites.net
-export PETSTOREPRODUCTSERVICE_URL=http://mdjava-products.azurewebsites.net
-export PETSTOREORDERSERVICE_URL=http://mdjava-orders.azurewebsites.net
+export SERVICE=http://mdjava-pets
+export PRODUCTS=http://mdjava-products
+export ORDERS=http://mdjava-orders
+export HOST=-eu.azurewebsites.net
 
-az group create --location $AZURE_REGION --resource-group $RESOURCE_GROUP
+
+az group create --location $AZURE_REGION_PL --resource-group $RESOURCE_GROUP
+az group create --location $AZURE_REGION_EU --resource-group $RESOURCE_GROUP_EU
+az group create --location $AZURE_REGION_PL --resource-group $RESOURCE_GROUP_PL
 
 
 az acr create --location $AZURE_REGION --name $D_REG_NAME --resource-group $RESOURCE_GROUP --sku Basic --admin-enabled true
@@ -28,20 +41,24 @@ PRINCIPAL_ID=$(az identity show --resource-group $RESOURCE_GROUP --name myID --q
 REGISTRY_ID=$(az acr show --resource-group $RESOURCE_GROUP --name $D_REG_NAME --query id --output tsv)
 az role assignment create --assignee $PRINCIPAL_ID --scope $REGISTRY_ID --role "AcrPull"
 
+az appservice plan create --name $AZURE_APP_PLAN --resource-group $RESOURCE_GROUP_EU --is-linux --location $AZURE_REGION_EU --sku FREE
 
 
+export AZURE_APP_PLAN=mdjava_plan-eu
+az webapp create -g $RESOURCE_GROUP_EU -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_PETS_EU -i $D_REG_NAME.azurecr.io/petstorepetservice:latest
+az webapp create -g $RESOURCE_GROUP_EU -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_PRODUCTS_EU -i $D_REG_NAME.azurecr.io/petstoreproductservice:latest
+az webapp create -g $RESOURCE_GROUP_EU -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_ORDERS_EU -i $D_REG_NAME.azurecr.io/petstoreorderservice:latest
+az webapp create -g $RESOURCE_GROUP -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_UI_EU -i $D_REG_NAME.azurecr.io/petstoreapp:latest
 
-az appservice plan create --name $AZURE_APP_PLAN --resource-group $RESOURCE_GROUP --is-linux --location $AZURE_REGION --sku FREE
-az webapp create -g $RESOURCE_GROUP -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_PETS -i $D_REG_NAME.azurecr.io/petstorepetservice:latest
-az webapp config appsettings set -g $RESOURCE_GROUP -n $AZURE_WEB_APP_PETS --settings WEBSITES_PORT=8080
-az webapp create -g $RESOURCE_GROUP -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_PRODUCTS -i $D_REG_NAME.azurecr.io/petstoreproductservice:latest
-az webapp config appsettings set -g $RESOURCE_GROUP -n $AZURE_WEB_APP_PRODUCTS --settings WEBSITES_PORT=8080
-az webapp create -g $RESOURCE_GROUP -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_ORDERS -i $D_REG_NAME.azurecr.io/petstoreorderservice:latest
-az webapp config appsettings set -g $RESOURCE_GROUP -n $AZURE_WEB_APP_ORDERS --settings WEBSITES_PORT=8080
-
-az webapp create -g $RESOURCE_GROUP -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_UI -i $D_REG_NAME.azurecr.io/petstoreapp:latest
-az webapp config appsettings set -g $RESOURCE_GROUP -n $AZURE_WEB_APP_UI --settings WEBSITES_PORT=8080 PETSTOREPETSERVICE_URL=$PETSTOREPETSERVICE_URL PETSTOREPRODUCTSERVICE_URL=$PETSTOREPRODUCTSERVICE_URL PETSTOREORDERSERVICE_URL=$PETSTOREORDERSERVICE_URL
-
+export AZURE_APP_PLAN=mdjava_plan-eu
+export SERVICE=http://mdjava-pets
+export PRODUCTS=http://mdjava-products
+export ORDERS=http://mdjava-orders
+export HOST=-us.azurewebsites.net
+az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_PETS_PL --settings WEBSITES_PORT=8080
+az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_PRODUCTS_PL --settings WEBSITES_PORT=8080
+az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_ORDERS_PL --settings WEBSITES_PORT=8080
+az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_UI_PL --settings WEBSITES_PORT=8080 PETSTOREPETSERVICE_URL=$SERVICE$HOST PETSTOREPRODUCTSERVICE_URL=$PRODUCTS$HOST PETSTOREORDERSERVICE_URL=$ORDERS$HOST
 
 
 az group delete --resource-group $RESOURCE_GROUP
