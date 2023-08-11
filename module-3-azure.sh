@@ -1,4 +1,4 @@
-export RESOURCE_GROUP_PL=mdjava_rg_pl
+export RESOURCE_GROUP_PL=mdjava_rg_us
 export RESOURCE_GROUP_EU=mdjava_rg_eu
 export RESOURCE_GROUP=mdjava_rg_repo
 export AZURE_REGION_PL=polandcentral
@@ -23,7 +23,7 @@ export AZ_NET=.azurewebsites.net
 export SERVICE=http://mdjava-pets
 export PRODUCTS=http://mdjava-products
 export ORDERS=http://mdjava-orders
-export HOST=-eu.azurewebsites.net
+export HOST=-us.azurewebsites.net
 
 
 az group create --location $AZURE_REGION_PL --resource-group $RESOURCE_GROUP
