@@ -6,6 +6,10 @@
       "defaultValue": "mdjava-app-eu",
       "type": "String"
     },
+    "managed_identity_id": {
+      "defaultValue": "f375b016-15a5-4d19-85f9-a84481d2a3b3",
+      "type": "String"
+    },
     "sites_mdjava_pets_eu_name": {
       "defaultValue": "mdjava-pets-eu",
       "type": "String"
@@ -149,7 +153,7 @@
         "siteConfig": {
           "numberOfWorkers": 1,
           "linuxFxVersion": "DOCKER|mdjava.azurecr.io/petstoreorderservice:latest",
-          "acrUseManagedIdentityCreds": false,
+          "acrUseManagedIdentityCreds": true,
           "alwaysOn": false,
           "http20Enabled": true,
           "functionAppScaleLimit": 0,
@@ -208,7 +212,7 @@
         "siteConfig": {
           "numberOfWorkers": 1,
           "linuxFxVersion": "DOCKER|mdjava.azurecr.io/petstorepetservice:latest",
-          "acrUseManagedIdentityCreds": false,
+          "acrUseManagedIdentityCreds": true,
           "alwaysOn": false,
           "http20Enabled": true,
           "functionAppScaleLimit": 0,
@@ -267,7 +271,7 @@
         "siteConfig": {
           "numberOfWorkers": 1,
           "linuxFxVersion": "DOCKER|mdjava.azurecr.io/petstoreproductservice:latest",
-          "acrUseManagedIdentityCreds": false,
+          "acrUseManagedIdentityCreds": true,
           "alwaysOn": false,
           "http20Enabled": true,
           "functionAppScaleLimit": 0,
@@ -409,9 +413,9 @@
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
-        "httpLoggingEnabled": false,
+        "httpLoggingEnabled": true,
         "acrUseManagedIdentityCreds": true,
-        "acrUserManagedIdentityID": "f375b016-15a5-4d19-85f9-a84481d2a3b3",
+        "acrUserManagedIdentityID": "[parameters('managed_identity_id')]",
         "logsDirectorySizeLimit": 35,
         "detailedErrorLoggingEnabled": false,
         "publishingUsername": "$mdjava-app-eu",
@@ -435,7 +439,7 @@
         "vnetRouteAllEnabled": false,
         "vnetPrivatePortsCount": 0,
         "localMySqlEnabled": false,
-        "xManagedServiceIdentityId": 4553,
+        "xManagedServiceIdentityId": 8021,
         "ipSecurityRestrictions": [
           {
             "ipAddress": "Any",
@@ -493,7 +497,8 @@
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
         "httpLoggingEnabled": false,
-        "acrUseManagedIdentityCreds": false,
+        "acrUseManagedIdentityCreds": true,
+        "acrUserManagedIdentityID": "[parameters('managed_identity_id')]",
         "logsDirectorySizeLimit": 35,
         "detailedErrorLoggingEnabled": false,
         "publishingUsername": "$mdjava-orders-eu",
@@ -517,7 +522,7 @@
         "vnetRouteAllEnabled": false,
         "vnetPrivatePortsCount": 0,
         "localMySqlEnabled": false,
-        "xManagedServiceIdentityId": 4554,
+        "xManagedServiceIdentityId": 8023,
         "ipSecurityRestrictions": [
           {
             "ipAddress": "Any",
@@ -575,7 +580,8 @@
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
         "httpLoggingEnabled": false,
-        "acrUseManagedIdentityCreds": false,
+        "acrUseManagedIdentityCreds": true,
+        "acrUserManagedIdentityID": "[parameters('managed_identity_id')]",
         "logsDirectorySizeLimit": 35,
         "detailedErrorLoggingEnabled": false,
         "publishingUsername": "$mdjava-pets-eu",
@@ -599,7 +605,7 @@
         "vnetRouteAllEnabled": false,
         "vnetPrivatePortsCount": 0,
         "localMySqlEnabled": false,
-        "xManagedServiceIdentityId": 4555,
+        "xManagedServiceIdentityId": 8020,
         "ipSecurityRestrictions": [
           {
             "ipAddress": "Any",
@@ -657,7 +663,8 @@
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
         "httpLoggingEnabled": false,
-        "acrUseManagedIdentityCreds": false,
+        "acrUseManagedIdentityCreds": true,
+        "acrUserManagedIdentityID": "[parameters('managed_identity_id')]",
         "logsDirectorySizeLimit": 35,
         "detailedErrorLoggingEnabled": false,
         "publishingUsername": "$mdjava-products-eu",
@@ -681,7 +688,7 @@
         "vnetRouteAllEnabled": false,
         "vnetPrivatePortsCount": 0,
         "localMySqlEnabled": false,
-        "xManagedServiceIdentityId": 4556,
+        "xManagedServiceIdentityId": 8022,
         "ipSecurityRestrictions": [
           {
             "ipAddress": "Any",
