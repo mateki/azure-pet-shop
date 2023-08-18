@@ -1,20 +1,20 @@
-export RESOURCE_GROUP_PL=mdjava_rg_us
+export RESOURCE_GROUP_US=mdjava_rg_us
 export RESOURCE_GROUP_EU=mdjava_rg_eu
 export RESOURCE_GROUP=mdjava_rg_repo
-export AZURE_REGION_PL=polandcentral
+export AZURE_REGION_US=polandcentral
 export AZURE_REGION_US=westus
 export AZURE_REGION_EU=westeurope
-export AZURE_APP_PLAN=mdjava_plan
+export AZURE_APP_PLAN=mdjava_plan-eu
 
 export AZURE_WEB_APP_UI_EU=mdjava-app-eu
 export AZURE_WEB_APP_ORDERS_EU=mdjava-orders-eu
 export AZURE_WEB_APP_PRODUCTS_EU=mdjava-products-eu
 export AZURE_WEB_APP_PETS_EU=mdjava-pets-eu
 
-export AZURE_WEB_APP_UI_PL=mdjava-app-us
-export AZURE_WEB_APP_ORDERS_PL=mdjava-orders-us
-export AZURE_WEB_APP_PRODUCTS_PL=mdjava-products-us
-export AZURE_WEB_APP_PETS_PL=mdjava-pets-us
+export AZURE_WEB_APP_UI_US=mdjava-app-us
+export AZURE_WEB_APP_ORDERS_US=mdjava-orders-us
+export AZURE_WEB_APP_PRODUCTS_US=mdjava-products-us
+export AZURE_WEB_APP_PETS_US=mdjava-pets-us
 
 export VM_LIN_NAME=mateusz-ubntu-az-java
 
@@ -26,9 +26,9 @@ export ORDERS=http://mdjava-orders
 export HOST=-us.azurewebsites.net
 
 
-az group create --location $AZURE_REGION_PL --resource-group $RESOURCE_GROUP
+az group create --location $AZURE_REGION_EU --resource-group $RESOURCE_GROUP
 az group create --location $AZURE_REGION_EU --resource-group $RESOURCE_GROUP_EU
-az group create --location $AZURE_REGION_PL --resource-group $RESOURCE_GROUP_PL
+az group create --location $AZURE_REGION_US --resource-group $RESOURCE_GROUP_US
 
 
 az acr create --location $AZURE_REGION --name $D_REG_NAME --resource-group $RESOURCE_GROUP --sku Basic --admin-enabled true
@@ -45,20 +45,34 @@ az appservice plan create --name $AZURE_APP_PLAN --resource-group $RESOURCE_GROU
 
 
 export AZURE_APP_PLAN=mdjava_plan-eu
-az webapp create -g $RESOURCE_GROUP_EU -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_PETS_EU -i $D_REG_NAME.azurecr.io/petstorepetservice:latest
+az webapp create -g $RESOURCE_GROUP_EU -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_PETS_US -i $D_REG_NAME.azurecr.io/petstorepetservice:latest
 az webapp create -g $RESOURCE_GROUP_EU -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_PRODUCTS_EU -i $D_REG_NAME.azurecr.io/petstoreproductservice:latest
 az webapp create -g $RESOURCE_GROUP_EU -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_ORDERS_EU -i $D_REG_NAME.azurecr.io/petstoreorderservice:latest
-az webapp create -g $RESOURCE_GROUP -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_UI_EU -i $D_REG_NAME.azurecr.io/petstoreapp:latest
+az webapp create -g $RESOURCE_GROUP_US -p $AZURE_APP_PLAN -n $AZURE_WEB_APP_UI_US -i $D_REG_NAME.azurecr.io/petstoreapp:latest
 
-export AZURE_APP_PLAN=mdjava_plan-eu
 export SERVICE=http://mdjava-pets
 export PRODUCTS=http://mdjava-products
 export ORDERS=http://mdjava-orders
-export HOST=-us.azurewebsites.net
-az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_PETS_PL --settings WEBSITES_PORT=8080
-az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_PRODUCTS_PL --settings WEBSITES_PORT=8080
-az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_ORDERS_PL --settings WEBSITES_PORT=8080
-az webapp config appsettings set -g $RESOURCE_GROUP_PL -n $AZURE_WEB_APP_UI_PL --settings WEBSITES_PORT=8080 PETSTOREPETSERVICE_URL=$SERVICE$HOST PETSTOREPRODUCTSERVICE_URL=$PRODUCTS$HOST PETSTOREORDERSERVICE_URL=$ORDERS$HOST
+export HOST=-eu.azurewebsites.net
+
+az monitor app-insights component create --app mdjava-insight --resource-group $RESOURCE_GROUP --location $AZURE_REGION_EU
+
+PETSTORE_API_KEY=$(az monitor app-ins component show --resource-group $RESOURCE_GROUP --app mdjava-insight --query 'instrumentationKey' --output tsv)
+echo "Setting APPLICATIONINSIGHTS_CONNECTION_STRING InstrumentationKey=$PETSTORE_API_KEY"
+
+az webapp config appsettings set -g $RESOURCE_GROUP_EU -n $AZURE_WEB_APP_PETS_EU --settings WEBSITES_PORT=8080 APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+az webapp config appsettings set -g $RESOURCE_GROUP_EU -n $AZURE_WEB_APP_PRODUCTS_EU --settings WEBSITES_PORT=8080 APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+az webapp config appsettings set -g $RESOURCE_GROUP_EU -n $AZURE_WEB_APP_ORDERS_EU --settings WEBSITES_PORT=8080 APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+az webapp config appsettings set -g $RESOURCE_GROUP_EU -n $AZURE_WEB_APP_UI_EU --settings WEBSITES_PORT=8080 PETSTOREPETSERVICE_URL=$SERVICE$HOST PETSTOREPRODUCTSERVICE_URL=$PRODUCTS$HOST PETSTOREORDERSERVICE_URL=$ORDERS$HOST APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+
+
+az webapp config appsettings set -g $RESOURCE_GROUP_US -n $AZURE_WEB_APP_PETS_US --settings WEBSITES_PORT=8080 APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+az webapp config appsettings set -g $RESOURCE_GROUP_US -n $AZURE_WEB_APP_PRODUCTS_US --settings WEBSITES_PORT=8080 APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+az webapp config appsettings set -g $RESOURCE_GROUP_US -n $AZURE_WEB_APP_ORDERS_US --settings WEBSITES_PORT=8080 APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+az webapp config appsettings set -g $RESOURCE_GROUP_US -n $AZURE_WEB_APP_UI_US --settings WEBSITES_PORT=8080 PETSTOREPETSERVICE_URL=$SERVICE$HOST PETSTOREPRODUCTSERVICE_URL=$PRODUCTS$HOST PETSTOREORDERSERVICE_URL=$ORDERS$HOST APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+
+
+az webapp config appsettings set -g $RESOURCE_GROUP_EU -n $AZURE_WEB_APP_UI_US --settings WEBSITES_PORT=8080 PETSTOREPETSERVICE_URL=$SERVICE$HOST PETSTOREPRODUCTSERVICE_URL=$PRODUCTS$HOST PETSTOREORDERSERVICE_URL=$ORDERS$HOST
 
 
 az group delete --resource-group $RESOURCE_GROUP
@@ -77,3 +91,10 @@ docker push mdjava.azurecr.io/petstoreorderservice:latest
 //apps
 docker tag petstoreapp mdjava.azurecr.io/petstoreapp:latest
 docker push mdjava.azurecr.io/petstoreapp:latest
+
+# Retrieve InstrumentationKey
+
+
+APPINSIGHTS_INSTRUMENTATIONKEY=$PETSTORE_API_KEY APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY" ApplicationInsightsAgent_EXTENSION_VERSION="~2"
+
+az webapp config appsettings set --name $AZURE_WEB_APP_PETS_EU --resource-group $RESOURCE_GROUP_EU --settings APPLICATIONINSIGHTS_CONNECTION_STRING="InstrumentationKey=""$PETSTORE_API_KEY"
