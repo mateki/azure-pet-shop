@@ -35,10 +35,10 @@
       "name": "[parameters('serverfarms_mdjava_plan_eu_name')]",
       "location": "West Europe",
       "sku": {
-        "name": "F1",
-        "tier": "Free",
-        "size": "F1",
-        "family": "F",
+        "name": "B3",
+        "tier": "Basic",
+        "size": "B3",
+        "family": "B",
         "capacity": 1
       },
       "kind": "linux",
@@ -92,6 +92,29 @@
         "vnetImagePullEnabled": false,
         "vnetContentShareEnabled": false,
         "siteConfig": {
+          "appSettings": [
+            {
+              "name": "PETSTOREPETSERVICE_URL",
+              "value":"http://mdjava-pets-eu.azurewebsites.net"
+
+            },
+            {
+              "name": "PETSTOREPRODUCTSERVICE_URL",
+              "value":"http://mdjava-products-eu.azurewebsites.net"
+            },
+            {
+              "name": "PETSTOREORDERSERVICE_URL",
+              "value":"http://mdjava-orders-eu.azurewebsites.net"
+            },
+            {
+              "name": "DOCKER_ENABLE_CI",
+              "value": "true"
+            },
+            {
+              "name": "WEBSITES_PORT",
+              "value": "8080"
+            }
+          ],
           "numberOfWorkers": 1,
           "linuxFxVersion": "DOCKER|mdjava.azurecr.io/petstoreapp:latest",
           "acrUseManagedIdentityCreds": true,
@@ -151,6 +174,16 @@
         "vnetImagePullEnabled": false,
         "vnetContentShareEnabled": false,
         "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_ENABLE_CI",
+              "value": "true"
+            },
+            {
+              "name": "WEBSITES_PORT",
+              "value": "8080"
+            }
+          ],
           "numberOfWorkers": 1,
           "linuxFxVersion": "DOCKER|mdjava.azurecr.io/petstoreorderservice:latest",
           "acrUseManagedIdentityCreds": true,
@@ -210,6 +243,16 @@
         "vnetImagePullEnabled": false,
         "vnetContentShareEnabled": false,
         "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_ENABLE_CI",
+              "value": "true"
+            },
+            {
+              "name": "WEBSITES_PORT",
+              "value": "8080"
+            }
+          ],
           "numberOfWorkers": 1,
           "linuxFxVersion": "DOCKER|mdjava.azurecr.io/petstorepetservice:latest",
           "acrUseManagedIdentityCreds": true,
@@ -269,6 +312,16 @@
         "vnetImagePullEnabled": false,
         "vnetContentShareEnabled": false,
         "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_ENABLE_CI",
+              "value": "true"
+            },
+            {
+              "name": "WEBSITES_PORT",
+              "value": "8080"
+            }
+          ],
           "numberOfWorkers": 1,
           "linuxFxVersion": "DOCKER|mdjava.azurecr.io/petstoreproductservice:latest",
           "acrUseManagedIdentityCreds": true,
