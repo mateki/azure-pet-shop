@@ -8,6 +8,10 @@ import com.microsoft.azure.functions.HttpStatus;
 import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
+import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.blob.CloudBlobClient;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
 
 import java.util.Optional;
 
@@ -22,22 +26,38 @@ public class Function {
      */
     @FunctionName("HttpExample")
     public HttpResponseMessage run(
-            @HttpTrigger(
-                name = "req",
-                methods = {HttpMethod.GET, HttpMethod.POST},
-                authLevel = AuthorizationLevel.ANONYMOUS)
-                HttpRequestMessage<Optional<String>> request,
+            @HttpTrigger(name = "req", methods = {HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
+
         context.getLogger().info("Java HTTP trigger processed a request.");
 
-        // Parse query parameter
-        final String query = request.getQueryParameters().get("name");
-        final String name = request.getBody().orElse(query);
+        // Get the name parameter from the request
+        String name = request.getBody().orElse("");
 
-        if (name == null) {
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Please pass a name on the query string or in the request body").build();
-        } else {
-            return request.createResponseBuilder(HttpStatus.OK).body("Hello, " + name).build();
+        // Get the Blob Storage connection string and container name from environment variables
+        String storageConnectionString = System.getenv("AzureWebJobsStorage");
+        String containerName = "reservations";
+
+        try {
+            // Create a CloudBlobClient object using the connection string
+            CloudBlobClient blobClient = CloudStorageAccount.parse(storageConnectionString).createCloudBlobClient();
+
+            // Get a reference to the container
+            CloudBlobContainer container = blobClient.getContainerReference(containerName);
+
+            // Create a new blob with a random name
+            String blobName = java.util.UUID.randomUUID().toString();
+            CloudBlockBlob blob = container.getBlockBlobReference(blobName);
+
+            // Upload the name parameter to the blob
+            blob.uploadText(name);
+
+            // Return a success response
+            return request.createResponseBuilder(HttpStatus.OK).body("Reservation saved: " + name).build();
+
+        } catch (Exception e) {
+            // Return an error response
+            return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving reservation: " + e.getMessage()).build();
         }
     }
 }
