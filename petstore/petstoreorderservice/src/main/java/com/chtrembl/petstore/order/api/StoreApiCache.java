@@ -113,7 +113,7 @@ public class StoreApiCache {
 		this.cacheManager.getCacheNames().stream().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
 	}
 
-	private static final class CustomHttpComponentsClientHttpRequestFactory
+	public static final class CustomHttpComponentsClientHttpRequestFactory
 			extends HttpComponentsClientHttpRequestFactory {
 
 		@Override
