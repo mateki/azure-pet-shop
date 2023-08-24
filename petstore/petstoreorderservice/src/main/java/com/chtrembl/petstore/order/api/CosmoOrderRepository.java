@@ -49,8 +49,6 @@ public class CosmoOrderRepository {
         System.exit(0);
     }
 
-    //  </Main>
-
     private void getStartedDemo() throws Exception {
         System.out.println("Using Azure Cosmos DB endpoint: " + accountHost);
 
@@ -91,7 +89,7 @@ public class CosmoOrderRepository {
             //  Create item using container that we created using sync client
 
             //  Using appropriate partition key improves the performance of database operations
-            CosmosItemResponse item = container.createItem(family, new PartitionKey(family.getEmail()), new CosmosItemRequestOptions());
+            CosmosItemResponse item = container.upsertItem(family, new PartitionKey(family.getEmail()), new CosmosItemRequestOptions());
 
             //  Get request charge and other properties like latency, and diagnostics strings, etc.
             System.out.println(String.format("Created item with request charge of %.2f within" +
