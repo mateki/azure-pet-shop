@@ -40,10 +40,7 @@ public class StoreApiController implements StoreApi {
     private final NativeWebRequest request;
 
     @Autowired
-    ItemReservationRepository reservationRepository;
-
-    @Autowired
-    CosmoOrderRepository orderRepository;
+    ItemReservationRepository orderRepository;
 
     @Autowired
     @Qualifier(value = "cacheManager")
@@ -102,7 +99,6 @@ public class StoreApiController implements StoreApi {
                         + "\", \"container\" : \"" + containerEnvironment.getContainerHostName()
                         + "\", \"ordersCacheSize\" : \"" + ordersCacheSize + "\", \"author\" : \"" + containerEnvironment.getAuthor()
                         + "\" }");
-        orderRepository.run();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -170,8 +166,7 @@ public class StoreApiController implements StoreApi {
             try {
                 Order order = this.storeApiCache.getOrder(body.getId());
                 String orderJSON = new ObjectMapper().writeValueAsString(order);
-                orderRepository.run();
-                reservationRepository.put(body.getId(),order);
+                orderRepository.put(order);
                 ApiUtil.setResponse(request, "application/json", orderJSON);
                 return new ResponseEntity<>(HttpStatus.OK);
             } catch (IOException e) {

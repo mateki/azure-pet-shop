@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 @Repository
-public class HtttpItemReservationRepository implements ItemReservationRepository{
-    static final Logger log = LoggerFactory.getLogger(HtttpItemReservationRepository.class);
+public class FunctionOrderRepository implements ItemReservationRepository{
+    static final Logger log = LoggerFactory.getLogger(FunctionOrderRepository.class);
 
     @Autowired
     RestTemplate restTemplate;
@@ -20,9 +22,9 @@ public class HtttpItemReservationRepository implements ItemReservationRepository
     private String petStoreReservationsURL;
 
     @Override
-    public void put(String key, Order order) {
+    public void put(Order order) {
         String endpoint = "/api/reservation";
-        String params = "?sessionid=" + key;
+        String params = "?sessionid=" + order.getId();
         String url = petStoreReservationsURL+endpoint + params;
         log.info("reservation for " + url);
         try {
@@ -31,5 +33,10 @@ public class HtttpItemReservationRepository implements ItemReservationRepository
         } catch (HttpStatusCodeException ex) {
             log.warn("reservation failed" + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
         }
+    }
+
+    @Override
+    public Optional<Order> get(String id) {
+        return Optional.empty();
     }
 }

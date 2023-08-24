@@ -35,6 +35,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableScheduling
 public class StoreApiCache {
 	static final Logger log = LoggerFactory.getLogger(StoreApiCache.class);
+	@Autowired
+	ItemReservationRepository orderRepository;
 
 	private final ObjectMapper objectMapper;
 
@@ -56,7 +58,7 @@ public class StoreApiCache {
 	@Cacheable("orders")
 	public Order getOrder(String id) {
 		log.info(String.format("PetStoreOrderService creating new order id:%s and caching it", id));
-		return new Order();
+		return orderRepository.get(id).orElseGet(Order::new);
 	}
 
 	@Cacheable("orders")
