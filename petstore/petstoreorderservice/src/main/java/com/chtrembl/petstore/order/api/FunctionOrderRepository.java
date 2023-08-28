@@ -18,7 +18,7 @@ public class FunctionOrderRepository implements ItemReservationRepository{
     @Autowired
     RestTemplate restTemplate;
 
-    @Value("${petstore.service.reservations.url:}")
+    @Value("${petstore.service.reservations.functions.url:}")
     private String petStoreReservationsURL;
 
     @Override

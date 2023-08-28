@@ -97,7 +97,8 @@ public class StoreApiController implements StoreApi {
         ApiUtil.setResponse(request, "application/json",
                 "{ \"service\" : \"order service\", \"version\" : \"" + containerEnvironment.getAppVersion()
                         + "\", \"container\" : \"" + containerEnvironment.getContainerHostName()
-                        + "\", \"ordersCacheSize\" : \"" + ordersCacheSize + "\", \"author\" : \"" + containerEnvironment.getAuthor()
+                        + "\", \"ordersCacheSize\" : \"" + ordersCacheSize
+                        + "\", \"author\" : \"" + containerEnvironment.getAuthor()
                         + "\" }");
         return new ResponseEntity<>(HttpStatus.OK);
     }

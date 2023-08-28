@@ -17,10 +17,10 @@ import java.util.Optional;
 @Repository
 @Primary
 public class CosmoOrderRepository implements ItemReservationRepository{
-    @Value("${cosmo.account.host:https://mdjavacosmo.documents.azure.com:443/}")
+    @Value("${petstore.service.reservations.cosmo.url:https://mdjavacosmo.documents.azure.com:443/}")
     private String accountHost;
 
-    @Value("${cosmo.account.key:zXQ23GlasovA5ALawr0XnSlwNbnd4FO9tvbWMYS6u2uaLc0RtVl2ExCjc4BVlxwMbATQtB5YYQZjACDbbXLbrA==}")
+    @Value("${petstore.service.reservations.cosmo.key:zXQ23GlasovA5ALawr0XnSlwNbnd4FO9tvbWMYS6u2uaLc0RtVl2ExCjc4BVlxwMbATQtB5YYQZjACDbbXLbrA==}")
     private String accountKey;
 
     static final Logger log = LoggerFactory.getLogger(CosmoOrderRepository.class);

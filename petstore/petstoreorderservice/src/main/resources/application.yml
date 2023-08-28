@@ -10,6 +10,12 @@ petstore:
   service:
     product:
       url: ${PETSTOREPRODUCTSERVICE_URL:http://localhost:8082}
+    reservations:
+      cosmo:
+        url: ${RESERVATIONS_URL:https://mdjavacosmo.documents.azure.com:443/}
+        key: ${RESERVATIONS_KEY::zXQ23GlasovA5ALawr0XnSlwNbnd4FO9tvbWMYS6u2uaLc0RtVl2ExCjc4BVlxwMbATQtB5YYQZjACDbbXLbrA==}
+      functions:
+        url: ${RESERVATIONS_URL:https://ordersreservation-20230820115219084.azurewebsites.net}
 
 spring:
   application:
