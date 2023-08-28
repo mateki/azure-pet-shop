@@ -12,5 +12,7 @@ RUN mvn clean package
 #
 FROM openjdk:17-slim
 COPY --from=build /build/target/*.jar /app/petstorepetservice.jar
+COPY agent/applicationinsights-agent-3.4.15.jar applicationinsights-agent-3.4.15.jar
+COPY agent/applicationinsights.json applicationinsights.json
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/petstorepetservice.jar"]
+ENTRYPOINT ["java", "-javaagent:applicationinsights-agent-3.4.15.jar","-jar","/app/petstorepetservice.jar"]

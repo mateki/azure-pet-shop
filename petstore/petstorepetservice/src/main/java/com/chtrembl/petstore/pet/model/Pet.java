@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -21,11 +22,16 @@ import io.swagger.annotations.ApiModelProperty;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-12-20T15:31:39.272-05:00")
 
+@Entity
+@Table(name = "PET")
 public class Pet {
 	@JsonProperty("id")
+	@Id
 	private Long id;
 
 	@JsonProperty("category")
+	@ManyToOne
+	@JoinColumn(name="category_id", nullable=false)
 	private Category category;
 
 	@JsonProperty("name")
@@ -37,6 +43,10 @@ public class Pet {
 
 	@JsonProperty("tags")
 	@Valid
+	@OneToMany(
+			cascade = CascadeType.ALL,
+			orphanRemoval = true
+	)
 	private List<Tag> tags = null;
 
 	/**

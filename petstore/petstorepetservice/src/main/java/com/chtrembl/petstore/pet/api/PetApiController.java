@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.PetCacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -49,6 +50,9 @@ public class PetApiController implements PetApi {
 	private ContainerEnvironment containerEnvironment;
 
 	@Autowired
+	private PetCacheService petCacheService;
+
+	@Autowired
 	private DataPreload dataPreload;
 
 	@Override
@@ -72,6 +76,19 @@ public class PetApiController implements PetApi {
 		}
 		MDC.put("containerHostName", this.containerEnvironment.getContainerHostName());
 		MDC.put("session_Id", request.getHeader("session-id"));
+	}
+	@RequestMapping(value = "pets", produces = { "application/json" }, method = RequestMethod.PUT)
+	public ResponseEntity<String> pets() {
+		conigureThreadForLogging();
+
+		petCacheService.loadCategories();
+		petCacheService.saveAll(this.getPreloadedPets());
+
+
+		ApiUtil.setResponse(request, "application/json",
+				"{ \"service\" : \"pet service\", \"version\" : \"" + containerEnvironment.getAppVersion()
+						+ "\", \"container\" : \"" + containerEnvironment.getContainerHostName() + "\" }");
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "pet/info", produces = { "application/json" }, method = RequestMethod.GET)
@@ -100,7 +117,7 @@ public class PetApiController implements PetApi {
 					"PetStorePetService incoming GET request to petstorepetservice/v2/pet/findPetsByStatus?status=%s",
 					status));
 			try {
-				String petsJSON = new ObjectMapper().writeValueAsString(this.getPreloadedPets());
+				String petsJSON = new ObjectMapper().writeValueAsString(petCacheService.findAll());
 				ApiUtil.setResponse(request, "application/json", petsJSON);
 				return new ResponseEntity<>(HttpStatus.OK);
 			} catch (JsonProcessingException e) {

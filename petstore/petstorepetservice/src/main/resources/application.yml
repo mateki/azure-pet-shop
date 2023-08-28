@@ -5,13 +5,25 @@ springfoxdocumentation:
       
 server:
   port: ${PETSTOREPETSERVICE_SERVER_PORT:8080}
-  
+       
 spring:
   application:
     name: petstorepetservice
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  datasource:
+    url: ${DATA_SOURCE_CONNECTION_STRING:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DATA_SOURCE_USER:postgres}
+    password: ${DATA_SOURCE_HOST:example}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL81Dialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'false'
 
 management:
   endpoints:
@@ -36,7 +48,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 2
@@ -48,7 +60,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 3
@@ -60,7 +72,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 4
@@ -72,7 +84,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"          
       status: "available"
     - id: 5
@@ -84,7 +96,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 6
@@ -96,7 +108,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"          
       status: "available"
     - id: 7
@@ -108,7 +120,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 8
@@ -120,7 +132,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 9
@@ -132,7 +144,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 10
@@ -144,7 +156,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 11
@@ -156,7 +168,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 12
@@ -168,7 +180,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 13
@@ -180,7 +192,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 14
@@ -192,7 +204,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 15
@@ -204,7 +216,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 16
@@ -216,7 +228,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 17
@@ -228,7 +240,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 18
@@ -240,7 +252,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 5
           name: "large"
       status: "available"
     - id: 19
@@ -252,7 +264,7 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 20
@@ -264,138 +276,138 @@ data:
       tags:
         - id: 1
           name: "doggie"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
     - id: 21
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "Abyssinian"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/abyssinian.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 22
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "American Bobtail"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/american-bobtail.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 23
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "American Shorthair"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/american-shorthair.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 24
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "Balinese"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/balinese.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 25
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "Birman"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/birman.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 26
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "Bombay"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/bombay.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 27
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "British Shorthair"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/british-shorthair.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 28
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "Burmilla"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/burmilla.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 29
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "Chartreux"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/chartreux.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 30
       category: 
-        id: 1
+        id: 2
         name: "Cat"
       name: "Cornish Rex"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/cat-breeds/cornish-rex.jpg?raw=true"
       tags:
-        - id: 1
-          name: "kittie"
         - id: 2
+          name: "kittie"
+        - id: 4
           name: "small"
       status: "available"
     - id: 31
       category: 
-        id: 1
+        id: 3
         name: "Fish"
       name: "Goldfish"
       photoURL: "https://raw.githubusercontent.com/chtrembl/staticcontent/master/fish-breeds/goldfish.jpg?raw=true"
       tags:
-        - id: 1
+        - id: 3
           name: "fishy"
-        - id: 2
+        - id: 4
           name: "small"
       status: "available"
