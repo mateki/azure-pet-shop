@@ -6,9 +6,9 @@ services:
     restart: always
     environment:
       - PETSTOREPETSERVICE_SERVER_PORT=8081
-      - DATA_SOURCE_CONNECTION_STRING=jdbc:postgresql://10.5.0.5:5432/postgres
-      - DATA_SOURCE_USER=postgres
-      - DATA_SOURCE_PASSWORD=example
+      - DATA_SOURCE_CONNECTION_STRING=jdbc:postgresql://mdjastore.postgres.database.azure.com/postgres
+      - DATA_SOURCE_USER=szef
+      - DATA_SOURCE_PASSWORD=Mdjava1@
     ports:
       - 8081:8081
     depends_on:
@@ -23,7 +23,8 @@ services:
     restart: always
     environment:
       - PETSTOREORDERSERVICE_SERVER_PORT=8083
-      - RESERVATIONS_URL=https://ordersreservation-20230820115219084.azurewebsites.net
+      - RESERVATIONS_URL=https://mdjavacosmo.documents.azure.com:443/
+      - RESERVATIONS_KEY=rHgVveInaUbn8EfFaihvbLyEzgjvXup3DVNtHKvQ4D9lrGbxZPQY5UXCQjInc364CUJdiodWER7aACDbF0srMw==
     ports:
       - 8083:8083
     networks:
@@ -36,9 +37,9 @@ services:
     restart: always
     environment:
       - PETSTOREPRODUCTSERVICE_SERVER_PORT=8082
-      - DATA_SOURCE_CONNECTION_STRING=jdbc:postgresql://10.5.0.5:5432/postgres
-      - DATA_SOURCE_USER=postgres
-      - DATA_SOURCE_PASSWORD=example
+      - DATA_SOURCE_CONNECTION_STRING=jdbc:postgresql://mdjastore.postgres.database.azure.com/postgres
+      - DATA_SOURCE_USER=szef
+      - DATA_SOURCE_PASSWORD=Mdjava1@
     ports:
       - 8082:8082
     depends_on:
