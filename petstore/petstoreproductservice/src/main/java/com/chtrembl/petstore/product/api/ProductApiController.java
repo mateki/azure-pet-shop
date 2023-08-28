@@ -8,10 +8,14 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.chtrembl.petstore.product.model.*;
+import io.swagger.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,10 +29,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.chtrembl.petstore.product.model.ContainerEnvironment;
-import com.chtrembl.petstore.product.model.DataPreload;
-import com.chtrembl.petstore.product.model.ModelApiResponse;
-import com.chtrembl.petstore.product.model.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -46,6 +46,12 @@ public class ProductApiController implements ProductApi {
 
 	private final NativeWebRequest request;
 
+	@Autowired
+	@Qualifier(value = "cacheManager")
+	private CacheManager cacheManager;
+
+	@Autowired
+	private ProductCacheService productCacheService;
 	@Autowired
 	private ContainerEnvironment containerEnvironment;
 
@@ -75,16 +81,40 @@ public class ProductApiController implements ProductApi {
 		MDC.put("session_Id", request.getHeader("session-id"));
 	}
 
-	@RequestMapping(value = "product/info", produces = { "application/json" }, method = RequestMethod.GET)
-	public ResponseEntity<String> info() {
-		conigureThreadForLogging();
 
+	@RequestMapping(value = "products", produces = { "application/json" }, method = RequestMethod.PUT)
+	public ResponseEntity<String> products() {
+		conigureThreadForLogging();
+		productCacheService.loadCategories();
+		productCacheService.saveAll(this.getPreloadedProducts());
 		// password used for cred scan demo
-		String password = "foobar";
-		log.info("PetStoreProductService incoming GET request to petstoreproductservice/v2/info");
 		ApiUtil.setResponse(request, "application/json",
 				"{ \"service\" : \"product service\", \"version\" : \"" + containerEnvironment.getAppVersion()
 						+ "\", \"container\" : \"" + containerEnvironment.getContainerHostName() + "\" }");
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+
+	@RequestMapping(value = "product/info", produces = { "application/json" }, method = RequestMethod.GET)
+	public ResponseEntity<String> info() {
+		conigureThreadForLogging();
+		// password used for cred scan demo
+		String password = "foobar";
+		long productsCacheSize=0;
+		try {
+			org.springframework.cache.concurrent.ConcurrentMapCache mapCache = ((org.springframework.cache.concurrent.ConcurrentMapCache) this.cacheManager
+					.getCache("products"));
+			productsCacheSize = mapCache.getNativeCache().size();
+		} catch (Exception e) {
+			log.warn(String.format("could not get the orders cache size :%s", e.getMessage()));
+		}
+		log.info("PetStoreProductService incoming GET request to petstoreproductservice/v2/info");
+		ApiUtil.setResponse(request, "application/json",
+				"{ \"service\" : \"product service\""
+						+ ", \"version\" : \"" + containerEnvironment.getAppVersion()
+						+ "\", \"productsCacheSize\" : \"" + productsCacheSize
+						+ "\", \"container\" : \"" + containerEnvironment.getContainerHostName()
+						+ "\" }");
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -101,7 +131,8 @@ public class ProductApiController implements ProductApi {
 					"PetStoreProductService incoming GET request to petstoreproductservice/v2/pet/findProductsByStatus?status=%s",
 					status));
 			try {
-				String petsJSON = new ObjectMapper().writeValueAsString(this.getPreloadedProducts());
+				List<Product> productsDB = productCacheService.findAll();
+				String petsJSON = new ObjectMapper().writeValueAsString(productsDB);
 				ApiUtil.setResponse(request, "application/json", petsJSON);
 				return new ResponseEntity<>(HttpStatus.OK);
 			} catch (JsonProcessingException e) {
