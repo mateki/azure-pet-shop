@@ -15,7 +15,7 @@ spring:
   datasource:
     url: ${DATA_SOURCE_CONNECTION_STRING:jdbc:postgresql://localhost:5432/postgres}
     username: ${DATA_SOURCE_USER:postgres}
-    password: ${DATA_SOURCE_HOST:example}
+    password: ${DATA_SOURCE_PASSWORD:example}
   jpa:
     properties:
       hibernate:
