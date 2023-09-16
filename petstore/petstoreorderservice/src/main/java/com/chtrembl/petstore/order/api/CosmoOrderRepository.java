@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Repository
-@Primary
 public class CosmoOrderRepository implements ItemReservationRepository{
     @Value("${petstore.service.reservations.cosmo.url:https://mdjavacosmo.documents.azure.com:443/}")
     private String accountHost;

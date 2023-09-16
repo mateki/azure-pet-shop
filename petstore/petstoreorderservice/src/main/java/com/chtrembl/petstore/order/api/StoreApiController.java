@@ -40,7 +40,10 @@ public class StoreApiController implements StoreApi {
     private final NativeWebRequest request;
 
     @Autowired
-    ItemReservationRepository orderRepository;
+    ServiceBusOrderRepository serviceBusOrderRepository;
+
+    @Autowired
+    CosmoOrderRepository cosmoOrderRepository;
 
     @Autowired
     @Qualifier(value = "cacheManager")
@@ -76,7 +79,7 @@ public class StoreApiController implements StoreApi {
     }
 
     @RequestMapping(value = "store/info", produces = {"application/json"}, method = RequestMethod.GET)
-    public ResponseEntity<String> info() {
+    public ResponseEntity<String> info() throws InterruptedException {
         conigureThreadForLogging();
 
         // password used for cred scan demo
@@ -94,12 +97,13 @@ public class StoreApiController implements StoreApi {
 
         // giving consumers JSON regardless here, info wasn't part of the swagger
         // contract :)
-        ApiUtil.setResponse(request, "application/json",
-                "{ \"service\" : \"order service\", \"version\" : \"" + containerEnvironment.getAppVersion()
-                        + "\", \"container\" : \"" + containerEnvironment.getContainerHostName()
-                        + "\", \"ordersCacheSize\" : \"" + ordersCacheSize
-                        + "\", \"author\" : \"" + containerEnvironment.getAuthor()
-                        + "\" }");
+        String responseBody =                "{ \"service\" : \"order service\", \"version\" : \"" + containerEnvironment.getAppVersion()
+                + "\", \"container\" : \"" + containerEnvironment.getContainerHostName()
+                + "\", \"ordersCacheSize\" : \"" + ordersCacheSize
+                + "\", \"author\" : \"" + containerEnvironment.getAuthor()
+                + "\" }";
+        ApiUtil.setResponse(request, "application/json",responseBody );
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -167,7 +171,8 @@ public class StoreApiController implements StoreApi {
             try {
                 Order order = this.storeApiCache.getOrder(body.getId());
                 String orderJSON = new ObjectMapper().writeValueAsString(order);
-                orderRepository.put(order);
+                serviceBusOrderRepository.put(order);
+                cosmoOrderRepository.put(order);
                 ApiUtil.setResponse(request, "application/json", orderJSON);
                 return new ResponseEntity<>(HttpStatus.OK);
             } catch (IOException e) {

@@ -1,8 +1,5 @@
 package com.chtrembl.petstore.order.api;
 
-import com.azure.cosmos.models.CosmosItemRequestOptions;
-import com.azure.cosmos.models.CosmosItemResponse;
-import com.azure.cosmos.models.PartitionKey;
 import com.azure.messaging.servicebus.*;
 import com.chtrembl.petstore.order.model.Order;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -27,12 +22,13 @@ public class ServiceBusOrderRepository implements ItemReservationRepository{
     @Value("${petstore.service.reservations.bus.url:Endpoint=sb://mdjava-bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=k0CT/uBUMzSdQ3QwFH/TXF6D3ewlwa2Xn+ASbMgr5pA=}")
     private String connectionString;
 
-    @Value("${petstore.service.reservations.bus.ques:reservation}")
+    @Value("${petstore.service.reservations.bus.ques:reservations}")
     private String queueName;
 
 
     @Override
     public void put(Order order) {
+        log.info( "Calling service Bus {} que {}",connectionString,queueName);
         ServiceBusSenderClient senderClient = new ServiceBusClientBuilder()
                 .connectionString(connectionString)
                 .sender()
@@ -48,6 +44,7 @@ public class ServiceBusOrderRepository implements ItemReservationRepository{
         }
         ServiceBusMessage serviceBusMessage = new ServiceBusMessage(oerder);
         serviceBusMessage.setSessionId(order.getId());
+        log.info( "output serviceBusMessage {}",order);
         senderClient.sendMessage(serviceBusMessage);
         System.out.println("Sent a single message to the queue: " + queueName);
     }
@@ -119,6 +116,4 @@ public class ServiceBusOrderRepository implements ItemReservationRepository{
         System.out.printf("Processing message. Session: %s, Sequence #: %s. Contents: %s%n", message.getMessageId(),
                 message.getSequenceNumber(), message.getBody());
     }
-
-
 }
