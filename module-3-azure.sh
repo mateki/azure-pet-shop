@@ -30,6 +30,31 @@ az group create --location $AZURE_REGION_EU --resource-group $RESOURCE_GROUP
 az group create --location $AZURE_REGION_EU --resource-group $RESOURCE_GROUP_EU
 az group create --location $AZURE_REGION_US --resource-group $RESOURCE_GROUP_US
 
+az keyvault create --resource-group $RESOURCE_GROUP --location centralus --name mdjava-vault
+az keyvault secret set --name szef --value Mdjava1@ --vault-name mdjava-vault
+az keyvault secret show --name szef --vault-name mdjava-vault --query "value"
+
+az webapp identity assign --name $AZURE_WEB_APP_ORDERS_US --resource-group $RESOURCE_GROUP_US
+az webapp identity assign --name $AZURE_WEB_APP_PETS_US --resource-group $RESOURCE_GROUP_US
+az webapp identity assign --name $AZURE_WEB_APP_PRODUCTS_US --resource-group $RESOURCE_GROUP_US
+az webapp identity assign --name $AZURE_WEB_APP_UI_US --resource-group $RESOURCE_GROUP_US
+
+az webapp identity assign --name $AZURE_WEB_APP_ORDERS_EU --resource-group $RESOURCE_GROUP_EU
+az webapp identity assign --name $AZURE_WEB_APP_PETS_EU --resource-group $RESOURCE_GROUP_EU
+az webapp identity assign --name $AZURE_WEB_APP_PRODUCTS_EU --resource-group $RESOURCE_GROUP_EU
+az webapp identity assign --name $AZURE_WEB_APP_UI_EU --resource-group $RESOURCE_GROUP_EU
+
+az keyvault set-policy --name "mdjava-vault" --object-id "f217b762-d88a-4214-9696-e243036bcded" --secret-permissions get list
+
+@Microsoft.KeyVault(SecretUri=https://mdjava-vault.vault.azure.net/secrets/data-source-url/)
+@Microsoft.KeyVault(SecretUri=https://mdjava-vault.vault.azure.net/secrets/data-source-szef-pass/)
+@Microsoft.KeyVault(SecretUri=https://mdjava-vault.vault.azure.net/secrets/data-source-user/)
+
+@Microsoft.KeyVault(SecretUri=https://mdjava-vault.vault.azure.net/secrets/cosmo-url/)
+@Microsoft.KeyVault(SecretUri=https://mdjava-vault.vault.azure.net/secrets/cosmos-key/)
+
+@Microsoft.KeyVault(SecretUri=https://mdjava-vault.vault.azure.net/secrets/b2c-client-id/)
+@Microsoft.KeyVault(SecretUri=https://mdjava-vault.vault.azure.net/secrets/b2c-client-secret/)
 
 az acr create --location $AZURE_REGION --name $D_REG_NAME --resource-group $RESOURCE_GROUP --sku Basic --admin-enabled true
 az acr credential show --resource-group $RESOURCE_GROUP --name $D_REG_NAME

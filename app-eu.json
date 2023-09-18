@@ -94,6 +94,26 @@
         "siteConfig": {
           "appSettings": [
             {
+              "name": "DATA_SOURCE_CONNECTION_STRING",
+              "value": "jdbc:postgresql://mdjastore.postgres.database.azure.com/postgres"
+            },
+            {
+              "name": "DATA_SOURCE_USER",
+              "value": "szef"
+            },
+            {
+              "name": "DATA_SOURCE_PASSWORD",
+              "value": "Mdjava1@"
+            },
+            {
+              "name": "RESERVATIONS_URL",
+              "value": "https://mdjavacosmo.documents.azure.com:443/"
+            },
+            {
+              "name": "RESERVATIONS_KEY",
+              "value": "rHgVveInaUbn8EfFaihvbLyEzgjvXup3DVNtHKvQ4D9lrGbxZPQY5UXCQjInc364CUJdiodWER7aACDbF0srMw=="
+            },
+            {
               "name": "PETSTOREPETSERVICE_URL",
               "value":"http://mdjava-pets-eu.azurewebsites.net"
 
@@ -176,6 +196,26 @@
         "siteConfig": {
           "appSettings": [
             {
+              "name": "DATA_SOURCE_CONNECTION_STRING",
+              "value": "jdbc:postgresql://mdjastore.postgres.database.azure.com/postgres"
+            },
+            {
+              "name": "DATA_SOURCE_USER",
+              "value": "szef"
+            },
+            {
+              "name": "DATA_SOURCE_PASSWORD",
+              "value": "Mdjava1@"
+            },
+            {
+              "name": "RESERVATIONS_URL",
+              "value": "https://mdjavacosmo.documents.azure.com:443/"
+            },
+            {
+              "name": "RESERVATIONS_KEY",
+              "value": "rHgVveInaUbn8EfFaihvbLyEzgjvXup3DVNtHKvQ4D9lrGbxZPQY5UXCQjInc364CUJdiodWER7aACDbF0srMw=="
+            },
+            {
               "name": "DOCKER_ENABLE_CI",
               "value": "true"
             },
@@ -245,6 +285,26 @@
         "siteConfig": {
           "appSettings": [
             {
+              "name": "DATA_SOURCE_CONNECTION_STRING",
+              "value": "jdbc:postgresql://mdjastore.postgres.database.azure.com/postgres"
+            },
+            {
+              "name": "DATA_SOURCE_USER",
+              "value": "szef"
+            },
+            {
+              "name": "DATA_SOURCE_PASSWORD",
+              "value": "Mdjava1@"
+            },
+            {
+              "name": "RESERVATIONS_URL",
+              "value": "https://mdjavacosmo.documents.azure.com:443/"
+            },
+            {
+              "name": "RESERVATIONS_KEY",
+              "value": "rHgVveInaUbn8EfFaihvbLyEzgjvXup3DVNtHKvQ4D9lrGbxZPQY5UXCQjInc364CUJdiodWER7aACDbF0srMw=="
+            },
+            {
               "name": "DOCKER_ENABLE_CI",
               "value": "true"
             },
@@ -313,6 +373,26 @@
         "vnetContentShareEnabled": false,
         "siteConfig": {
           "appSettings": [
+            {
+              "name": "DATA_SOURCE_CONNECTION_STRING",
+              "value": "jdbc:postgresql://mdjastore.postgres.database.azure.com/postgres"
+            },
+            {
+              "name": "DATA_SOURCE_USER",
+              "value": "szef"
+            },
+            {
+              "name": "DATA_SOURCE_PASSWORD",
+              "value": "Mdjava1@"
+            },
+            {
+              "name": "RESERVATIONS_URL",
+              "value": "https://mdjavacosmo.documents.azure.com:443/"
+            },
+            {
+              "name": "RESERVATIONS_KEY",
+              "value": "rHgVveInaUbn8EfFaihvbLyEzgjvXup3DVNtHKvQ4D9lrGbxZPQY5UXCQjInc364CUJdiodWER7aACDbF0srMw=="
+            },
             {
               "name": "DOCKER_ENABLE_CI",
               "value": "true"

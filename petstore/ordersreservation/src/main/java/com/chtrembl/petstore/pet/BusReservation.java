@@ -22,7 +22,7 @@ public class BusReservation {
      */
     @FunctionName("orderServiceBusReservation")
     public void run(
-            @ServiceBusQueueTrigger(name = "message", queueName = "reservation", connection = "ServiceBusConnection") String message,
+            @ServiceBusQueueTrigger(name = "message", queueName = "orders", connection = "ServiceBusConnection") String message,
             @BindingName("SessionId") String sessionId,
             final ExecutionContext context
     ) {
@@ -43,28 +43,16 @@ public class BusReservation {
     private HttpStatus dbReservation(final ExecutionContext context, String message, String sessionId) {
         context.getLogger().info("DB save attempt");
 
-        // Get the name parameter from the request
-
-
-        // Get the Blob Storage connection string and container name from environment variables
         String storageConnectionString = System.getenv("AzureWebJobsStorage");
         String containerName = "reservations";
 
         try {
-            // Create a CloudBlobClient object using the connection string
             CloudBlobClient blobClient = CloudStorageAccount.parse(storageConnectionString).createCloudBlobClient();
-
-            // Get a reference to the container
             CloudBlobContainer container = blobClient.getContainerReference(containerName);
-
-            // Create the container if it does not exist
             container.createIfNotExists();
 
-            // Create a new blob with a random name
             String blobName = (StringUtils.isBlank(sessionId) ? java.util.UUID.randomUUID().toString() : sessionId) + ".json";
             CloudBlockBlob blob = container.getBlockBlobReference(blobName);
-
-            // Upload the name parameter to the blob
             blob.uploadText(message);
 
 
@@ -74,11 +62,8 @@ public class BusReservation {
         }
         return HttpStatus.OK;
     }
-
-
     private void reservationFallback(final ExecutionContext context, String message) {
         try {
-            // Get the name parameter from the request
 
             String mailerUrl = System.getenv("MailSender");
             context.getLogger().info("calling fallback mail sender "+mailerUrl);
@@ -99,10 +84,8 @@ public class BusReservation {
             }{
                 context.getLogger().info("fallback failure "+responseMessage);
             }
-
         } catch (Exception e) {
             context.getLogger().info("fallback failure "+e);
         }
-
     }
 }

@@ -185,6 +185,22 @@ public class StoreApiController implements StoreApi {
 
     }
 
+    @RequestMapping(value = "order/heavy", produces = { "application/json" }, method = RequestMethod.GET)
+    public ResponseEntity<String> heavy() {
+        conigureThreadForLogging();
+        log.info("heavy start");
+        long result=0;
+        for(long i=0; i<50l*Integer.MAX_VALUE; i++){
+            double x=17/4;
+            result = i;
+        }
+        log.info("heavy done {}",result);
+        ApiUtil.setResponse(request, "application/json",
+                "{ \"service\" : \"pet service\", \"counter\" : \"" + result
+                        + "\", \"container\" : \"" + containerEnvironment.getContainerHostName() + "\" }");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @Override
     public ResponseEntity<Order> getOrderById(
             @ApiParam(value = "ID of the order that needs to be deleted", required = true) @PathVariable("orderId") String orderId) {

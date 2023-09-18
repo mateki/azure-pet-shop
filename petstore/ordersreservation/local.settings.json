@@ -3,7 +3,7 @@
   "Values": {
     "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=f3bf792c50344ca3bdaa;AccountKey=cOnX5LKi/jdbo5JPWnsBkhBreWCON2t0USmjxKUeJ7atGhrg2Zb7LabmGQdTFppKBjIZH1SxWM9r+AStz4S0Ug==;EndpointSuffix=core.windows.net",
     "ServiceBusConnection": "Endpoint=sb://mdjava-bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=k0CT/uBUMzSdQ3QwFH/TXF6D3ewlwa2Xn+ASbMgr5pA=",
-    "reservation": "reservation",
+    "reservation": "orders",
     "MailSender": "https://prod-229.westeurope.logic.azure.com:443/workflows/b77c39d6f48d4099b11855b100554718/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=HQ0v9FmLZPcjsqjiAyc2d0Ibgi9kRdGG536UxV8zBiU",
     "FUNCTIONS_WORKER_RUNTIME": "java",
     "functionTimeout": "00:10:00"

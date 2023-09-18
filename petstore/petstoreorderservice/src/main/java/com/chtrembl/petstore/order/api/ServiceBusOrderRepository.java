@@ -19,10 +19,10 @@ import java.util.concurrent.TimeUnit;
 public class ServiceBusOrderRepository implements ItemReservationRepository{
     static final Logger log = LoggerFactory.getLogger(ServiceBusOrderRepository.class);
 
-    @Value("${petstore.service.reservations.bus.url:Endpoint=sb://mdjava-bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=k0CT/uBUMzSdQ3QwFH/TXF6D3ewlwa2Xn+ASbMgr5pA=}")
+    @Value("${petstore.service.reservations.bus.url}")
     private String connectionString;
 
-    @Value("${petstore.service.reservations.bus.ques:reservations}")
+    @Value("${petstore.service.reservations.bus.ques}")
     private String queueName;
 
 

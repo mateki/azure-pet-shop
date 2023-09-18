@@ -25,6 +25,7 @@ spring:
       ddl-auto: update
     show-sql: 'false'
 
+
 management:
   endpoints:
     web:

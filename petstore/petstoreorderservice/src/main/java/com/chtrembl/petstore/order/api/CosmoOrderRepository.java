@@ -16,40 +16,20 @@ import java.util.Optional;
 
 @Repository
 public class CosmoOrderRepository implements ItemReservationRepository{
-    @Value("${petstore.service.reservations.cosmo.url:https://mdjavacosmo.documents.azure.com:443/}")
+    @Value("${petstore.service.reservations.cosmo.url}")
     private String accountHost;
-
-    @Value("${petstore.service.reservations.cosmo.key:zXQ23GlasovA5ALawr0XnSlwNbnd4FO9tvbWMYS6u2uaLc0RtVl2ExCjc4BVlxwMbATQtB5YYQZjACDbbXLbrA==}")
+    @Value("${petstore.service.reservations.cosmo.key")
     private String accountKey;
-
     static final Logger log = LoggerFactory.getLogger(CosmoOrderRepository.class);
-
     private CosmosClient client;
-
     private final String databaseName = "Orders";
     private final String containerName = "reservations";
-
     private CosmosDatabase database;
     private CosmosContainer container;
-
     public void close() {
         client.close();
     }
 
-
-    public void run() {
-
-        try {
-            getStartedDemo();
-            log.info("Demo complete, please hold while resources are released");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(String.format("Cosmos getStarted failed with %s", e));
-        } finally {
-            log.info("Closing the client");
-            close();
-        }        
-    }
 
     public void init() throws Exception {
         log.info("Using Azure Cosmos DB endpoint: " + accountHost);
@@ -65,11 +45,9 @@ public class CosmoOrderRepository implements ItemReservationRepository{
                 .userAgentSuffix("CosmosDBJavaQuickstart")
                 .consistencyLevel(ConsistencyLevel.EVENTUAL)
                 .buildClient();
-
         createDatabaseIfNotExists();
         createContainerIfNotExists();
     }
-
 
     public void put(Order order) {
         try {
@@ -80,8 +58,12 @@ public class CosmoOrderRepository implements ItemReservationRepository{
             e.printStackTrace();
             System.err.println(String.format("Cosmos getStarted failed with %s", e));
         } finally {
+            try{
             log.info("Closing the client");
-            close();
+            close();}
+            catch (Exception exception){
+                log.warn("Closing cosmo client failed",exception);
+            }
         }
     }
 
@@ -99,31 +81,12 @@ public class CosmoOrderRepository implements ItemReservationRepository{
         }
     }
 
-    private void getStartedDemo() throws Exception {
-        init();
-
-        //  Setup family items to create
-        Order orderOrg = UserOrderMock.getOrder();
-        orderOrg.setStatus(Order.StatusEnum.PLACED);
-        log.info("order org " + orderOrg);
-        put(UserOrderMock.getOrder());
-
-        log.info("order from db " + get(orderOrg.getId()));
-
-        orderOrg.setStatus(Order.StatusEnum.APPROVED);
-        put(orderOrg);
-
-        log.info("order from db " + get(orderOrg.getId()));
-    }
 
     private void putOrder(Order order) throws Exception {
         double totalRequestCharge = 0;
-        //  Create item using container that we created using sync client
 
-        //  Using appropriate partition key improves the performance of database operations
         CosmosItemResponse item = container.upsertItem(order, new PartitionKey(order.getId()), new CosmosItemRequestOptions());
 
-        //  Get request charge and other properties like latency, and diagnostics strings, etc.
         log.info(String.format("Created item with request charge of %.2f within duration %s",
                 item.getRequestCharge(), item.getDuration()));
         totalRequestCharge += item.getRequestCharge();
@@ -133,8 +96,7 @@ public class CosmoOrderRepository implements ItemReservationRepository{
     }
 
     private Order getOrder(String id) {
-        //  Using partition key for point read scenarios.
-        //  This will help fast look up of items because of partition key
+
         try {
             CosmosItemResponse<Order> item = container.readItem(id, new PartitionKey(id), Order.class);
             double requestCharge = item.getRequestCharge();
